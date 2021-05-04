@@ -65,52 +65,25 @@ public class AccountHolder implements Comparable<AccountHolder>{
 	@Column(name = "ssn")
 	private String ssn;
 	
-	private String userName;
+	@OneToOne
+	@JoinColumn(name = "id", referencedColumnName = "id")
+	private MeritBankUser mbUser;
 	
-	private String password;
 	
-	private boolean active;
-	
-	private String role;
-	
+	public MeritBankUser getMbUser() {
+		return mbUser;
+	}
+
+	public void setMbUser(MeritBankUser mbUser) {
+		this.mbUser = mbUser;
+	}
+
 	public String getSsn() {
 		return ssn;
 	}
 
 	public void setSsn(String ssn) {
 		this.ssn = ssn;
-	}
-
-	public boolean isActive() {
-		return active;
-	}
-
-	public String getRole() {
-		return role;
-	}
-
-	public void setRole(String role) {
-		this.role = role;
-	}
-
-	public void setActive(boolean active) {
-		this.active = active;
-	}
-
-	public String getUserName() {
-		return userName;
-	}
-
-	public void setUserName(String userName) {
-		this.userName = userName;
-	}
-
-	public String getPassword() {
-		return password;
-	}
-
-	public void setPassword(String password) {
-		this.password = password;
 	}
 
 	public AccountHolder() {

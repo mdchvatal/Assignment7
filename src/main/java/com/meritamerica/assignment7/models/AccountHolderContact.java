@@ -62,8 +62,8 @@ public class AccountHolderContact {
 		return accountHolder;
 	}
 
-	public void setAccountHolder(AccountHolder accountHOlder) {
-		this.accountHolder = accountHOlder;
+	public void setAccountHolder(AccountHolder accountHolder) {
+		this.accountHolder = accountHolder;
 	}
 	
 	
