@@ -12,6 +12,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
+import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -24,6 +25,10 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 public class MeritBankUser implements UserDetails{
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	@NotNull
+	private Integer id;
 	
 	@NotBlank
 	@NotNull
@@ -33,13 +38,9 @@ public class MeritBankUser implements UserDetails{
 	@NotNull
 	private String password;
 	
-	@NotBlank
-	@NotNull
-	private boolean active;
-	
-	@NotBlank
-	@NotNull
 	private String role;
+	
+	private boolean active;
 	
 	@NotBlank
 	@NotNull
@@ -47,40 +48,11 @@ public class MeritBankUser implements UserDetails{
 	@OneToOne(cascade = CascadeType.ALL, mappedBy = "mbUser")
 	private AccountHolder accHolder;
 	
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	@NotNull
-	private Integer id;
-	
-	@Transient
-	private List<GrantedAuthority> authorities;
-	
 	public MeritBankUser() {
 	}
 	
 	public MeritBankUser(String username) {
 		this.username = username;
-	}
-	/*
-	public MeritBankUser() {
-		this.username = accHolder.getUsername();
-		this.password = accountHolder.getPassword();
-		this.active = accountHolder.isActive();
-		this.authorities = Arrays.stream(accountHolder.getRole().split(","))
-				.map(SimpleGrantedAuthority::new)
-				.collect(Collectors.toList());
-	}*/
-
-	public void setAuthorities(List<GrantedAuthority> authorities) {
-		this.authorities = authorities;
-	}
-
-	public boolean isActive() {
-		return active;
-	}
-
-	public void setActive(boolean active) {
-		this.active = active;
 	}
 
 	public String getRole() {
@@ -117,9 +89,17 @@ public class MeritBankUser implements UserDetails{
 		return username;
 	}
 	
+	public void setUsername(String username) {
+		this.username = username;
+	}
+	
 	@Override
 	public String getPassword() {
 		return password;
+	}
+	
+	public void setPassword(String password) {
+		this.password = password;
 	}
 
 	@Override
@@ -139,6 +119,14 @@ public class MeritBankUser implements UserDetails{
 
 	@Override
 	public boolean isEnabled() {
+		return true;
+	}
+
+	public void setActive(boolean active) {
+		this.active = active;
+	}
+
+	public boolean isActive() {
 		return active;
 	}
 }

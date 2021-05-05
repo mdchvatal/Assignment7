@@ -42,13 +42,6 @@ public abstract class MeritBankService {
 		return SAVINGS_INTEREST;
 	}
 
-	/*
-	public static List<AccountHolder> sortAccountHolders() {
-		List<AccountHolder> newList = accHolderRepo.findAll();
-		Collections.sort(newList);
-		return newList;
-	}*/
-
 	public static List<CDOffering> getCDOfferings() {
 			return cdOfferings;
 	}
@@ -109,73 +102,4 @@ public abstract class MeritBankService {
 	public static void setNextAccountNumber(int nextAccountNumber) {
 		MeritBankService.nextAccountNumber = nextAccountNumber;
 	}
-	
-	/*public static boolean processTransaction(Transaction transaction) 
-			throws NegativeAmountException, ExceedsAvailableBalanceException, ExceedsFraudSuspicionLimitException {
-		if (transaction.getClass() == WithdrawTransaction.class) {
-			if (transaction.getAmount() > 1000) {
-				transaction.setRejectionReason("Fraud Limit Exceeded");
-				throw new ExceedsFraudSuspicionLimitException();
-				}
-			if (transaction.getAmount() < 0) {
-				transaction.setRejectionReason("Negative Amount");
-				throw new NegativeAmountException();
-				}
-			if (transaction.getSourceAccount().getBalance() < transaction.getAmount()) {
-				transaction.setRejectionReason("Exceeds Available Balance");
-				throw new ExceedsAvailableBalanceException();
-			} else {
-			transaction.getTargetAccount().withdraw(transaction.getAmount());
-			return true;
-			}
-		}
-		if (transaction.getClass() == DepositTransaction.class) {
-			if (transaction.getAmount() < 0) {
-				transaction.setRejectionReason("Negative Amount");
-				throw new NegativeAmountException();
-				}
-			transaction.getTargetAccount().deposit(transaction.getAmount());
-			return true;
-			}
-		if (transaction.getClass() == TransferTransaction.class) {
-			if (transaction.getSourceAccount().getBalance() <= 0) {
-				transaction.setRejectionReason("Negative Amount");
-				throw new NegativeAmountException();
-				} else if (transaction.getSourceAccount().getBalance() < transaction.getAmount()) {
-						transaction.setRejectionReason("Exceeds Available Balance");
-						throw new ExceedsAvailableBalanceException();
-				} else {
-					transaction.getSourceAccount().withdraw(transaction.getAmount());
-					transaction.getTargetAccount().deposit(transaction.getAmount());
-					return true;
-				}
-		}
-		return false;
-	}*/
-	
-	/*public static FraudQueue getFraudQueue() {
-		return fraudQueue;
-	}*/
-	/*
-	public static BankAccount getBankAccount(long accountNum) {
-		for (AccountHolder accountHolder : accountHolders) {
-			for (CheckingAccount checkingAccount : accountHolder.getCheckingAccounts()) {
-				if (accountNum == checkingAccount.getAccountNumber()) {
-					return checkingAccount;
-				}
-			}
-			for (SavingsAccount savingsAccount : accountHolder.getSavingsAccounts()) {
-				if (accountNum == savingsAccount.getAccountNumber()) {
-					return savingsAccount;
-				}
-			}
-			for (CDAccount cdAccount : accountHolder.getCDAccounts()) {
-				if (accountNum == cdAccount.getAccountNumber()) {
-					return cdAccount;
-				}
-			}
-		}
-		System.out.println("Account Number Not Found \n");
-		return null;
-	}*/
 }

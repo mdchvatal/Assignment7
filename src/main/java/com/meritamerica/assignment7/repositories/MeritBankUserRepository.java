@@ -8,7 +8,6 @@ public interface MeritBankUserRepository extends JpaRepository<MeritBankUser, In
 
 	public MeritBankUser findByUsername(String userName);
 
-
 	public boolean existsMeritBankUserByUsername(String userName);
 	
 }

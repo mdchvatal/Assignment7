@@ -12,6 +12,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -34,7 +35,7 @@ import com.meritamerica.assignment7.services.AccountHolderServiceImpl;
 import com.meritamerica.assignment7.services.MeritBankServiceImpl;
 import com.meritamerica.assignment7.util.JwtUtil;
 
-
+@CrossOrigin
 @RestController
 public class MeritBankController {
 	
@@ -57,20 +58,30 @@ public class MeritBankController {
 	}
 	
 	@PostMapping("/authenticate")
-	@ResponseStatus(HttpStatus.ACCEPTED)
-	public ResponseEntity<?> createAuthenticationToken(@RequestBody AuthenticationRequest authRequest) throws Exception {
+	@ResponseStatus(HttpStatus.OK)
+	public String createAuthenticationToken(@RequestBody AuthenticationRequest authenticationRequest) throws Exception {
+
 		try {
 			authManager.authenticate(
-					new UsernamePasswordAuthenticationToken(authRequest.getUserName(), authRequest.getPassword())
+					new UsernamePasswordAuthenticationToken(authenticationRequest.getUserName(), authenticationRequest.getPassword())
 			);
-		} catch (BadCredentialsException e) {
+		}
+		catch (BadCredentialsException e) {
 			throw new Exception("Incorrect username or password", e);
 		}
-		final UserDetails mbUserDetails = meritBankSvc
-				.loadUserByUsername(authRequest.getUserName());
-		final String jwt = jwtUtil.generateToken(mbUserDetails);
-		
-		return ResponseEntity.ok(new AuthenticationResponse(jwt));
+		MeritBankUser userDetails = (MeritBankUser) meritBankSvc
+				.loadUserByUsername(authenticationRequest.getUserName());
+
+		String jwt = jwtUtil.generateToken(userDetails);
+		AuthenticationResponse authResponse = new AuthenticationResponse(jwt);
+		return authResponse.getJwt();
+	}
+	
+	@PostMapping("/authenticate/create-user")
+	@ResponseStatus(HttpStatus.CREATED)
+	public MeritBankUser postNewMeritBankUser(@RequestBody MeritBankUser mbUser) {
+		meritBankSvc.addMeritBankUser(mbUser);
+		return mbUser;
 	}
 	
 	@PostMapping("/account-holders")

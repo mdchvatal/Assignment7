@@ -40,6 +40,10 @@ public class MeritBankServiceImpl extends MeritBankService implements UserDetail
 		}
 	}
 	
+	public void addMeritBankUser(MeritBankUser mbUser) {
+		mbUserRepository.save(mbUser);
+	}
+	
 	public AccountHolderRepository getAccHolderRepo() {
 		return accHolderRepo;
 	}

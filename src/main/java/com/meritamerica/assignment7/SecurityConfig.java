@@ -11,10 +11,14 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.core.GrantedAuthorityDefaults;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 import com.meritamerica.assignment7.filters.JwtRequestFilter;
 import com.meritamerica.assignment7.services.MeritBankServiceImpl;
@@ -30,10 +34,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	MeritBankServiceImpl accHolderDetailsService;
 	
 	@Autowired
-	private JwtRequestFilter jwtRequestFilter;
+	JwtRequestFilter jwtRequestFilter;
 	
-	@Override
-	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+	@Autowired
+	public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
 		auth.userDetailsService(accHolderDetailsService);
 	}
 	
@@ -44,13 +48,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Override
 	protected void configure(HttpSecurity httpSecurity) throws Exception {
-		httpSecurity.csrf().disable()
+		httpSecurity.csrf().disable();
+		httpSecurity
 				.authorizeRequests().antMatchers("/authenticate").permitAll()
 				.anyRequest().authenticated().and()
 				.exceptionHandling().and().sessionManagement()
 				.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 		httpSecurity.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
-
 	}
 	
 	@Override
@@ -59,6 +63,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		return super.authenticationManagerBean();
 	}
 	
+	@Bean
+    GrantedAuthorityDefaults grantedAuthorityDefaults() {
+        return new GrantedAuthorityDefaults(""); 
+    }
 	
+	
+
 	
 }
