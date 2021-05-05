@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -57,29 +59,25 @@ public class MeritBankController {
 		return "Welcome to Merit Bank!";
 	}
 	
-	@PostMapping("/authenticate")
+	
 	@ResponseStatus(HttpStatus.OK)
-	public String createAuthenticationToken(@RequestBody AuthenticationRequest authenticationRequest) throws Exception {
-
-		try {
+	@PostMapping("/authenticate")
+	public ResponseEntity<?> createAuthenticationToken(@RequestBody AuthenticationRequest authenticationRequest) throws Exception {
 			authManager.authenticate(
-					new UsernamePasswordAuthenticationToken(authenticationRequest.getUserName(), authenticationRequest.getPassword())
-			);
-		}
-		catch (BadCredentialsException e) {
-			throw new Exception("Incorrect username or password", e);
-		}
+					new UsernamePasswordAuthenticationToken(authenticationRequest.getUserName(), authenticationRequest.getPassword()));
+
 		MeritBankUser userDetails = (MeritBankUser) meritBankSvc
 				.loadUserByUsername(authenticationRequest.getUserName());
 
 		String jwt = jwtUtil.generateToken(userDetails);
-		AuthenticationResponse authResponse = new AuthenticationResponse(jwt);
-		return authResponse.getJwt();
+		 
+		return ResponseEntity.ok(new AuthenticationResponse(jwt));
 	}
 	
 	@PostMapping("/authenticate/create-user")
 	@ResponseStatus(HttpStatus.CREATED)
 	public MeritBankUser postNewMeritBankUser(@RequestBody MeritBankUser mbUser) {
+		mbUser.getAuthorities();
 		meritBankSvc.addMeritBankUser(mbUser);
 		return mbUser;
 	}

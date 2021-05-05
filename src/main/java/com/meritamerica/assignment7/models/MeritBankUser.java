@@ -1,5 +1,6 @@
 package com.meritamerica.assignment7.models;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
@@ -40,8 +41,6 @@ public class MeritBankUser implements UserDetails{
 	
 	private String role;
 	
-	private boolean active;
-	
 	@NotBlank
 	@NotNull
 	@JsonIgnore
@@ -77,11 +76,6 @@ public class MeritBankUser implements UserDetails{
 
 	public void setId(Integer id) {
 		this.id = id;
-	}
-
-	@Override
-	public Collection<? extends GrantedAuthority> getAuthorities() {
-		return authorities;
 	}
 
 	@Override
@@ -122,11 +116,14 @@ public class MeritBankUser implements UserDetails{
 		return true;
 	}
 
-	public void setActive(boolean active) {
-		this.active = active;
+	public boolean isActive() {
+		return true;
 	}
 
-	public boolean isActive() {
-		return active;
+	@Override
+	public Collection<? extends GrantedAuthority> getAuthorities() {
+		Collection<GrantedAuthority> list = new ArrayList<GrantedAuthority>();
+		list.add(new SimpleGrantedAuthority(role));
+		return list;
 	}
 }
