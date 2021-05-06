@@ -26,10 +26,10 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 public class MeritBankUser implements UserDetails{
+	
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	@NotNull
-	private Integer id;
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private int id;
 	
 	@NotBlank
 	@NotNull
@@ -39,8 +39,12 @@ public class MeritBankUser implements UserDetails{
 	@NotNull
 	private String password;
 	
+	@NotNull
+	@NotBlank
 	private String role;
 	
+	@Transient
+	private List<GrantedAuthority> authorities;
 	
 	@JsonIgnore
 	@OneToOne(cascade = CascadeType.ALL, mappedBy = "mbUser")
@@ -122,8 +126,16 @@ public class MeritBankUser implements UserDetails{
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
-		Collection<GrantedAuthority> list = new ArrayList<GrantedAuthority>();
-		list.add(new SimpleGrantedAuthority(role));
-		return list;
+		authorities = new ArrayList<GrantedAuthority>();
+		authorities.add(new SimpleGrantedAuthority(role));
+		return authorities;
+	}
+	
+	public void setAuthorities() {
+		this.authorities.add(new SimpleGrantedAuthority(this.getRole()));
+	}
+
+	public void addAuthority(String role) {
+		authorities.add(new SimpleGrantedAuthority(role));
 	}
 }

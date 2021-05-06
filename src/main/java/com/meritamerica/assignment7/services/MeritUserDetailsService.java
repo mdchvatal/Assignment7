@@ -28,5 +28,24 @@ public class MeritUserDetailsService implements UserDetailsService{
 	public void addMeritBankUser(MeritBankUser mbUser) {
 		mbUserRepository.save(mbUser);
 	}
+	
+	public boolean isAdmin(MeritBankUser mbUser) {
+		String role = mbUser.getRole();
+		if (role.equalsIgnoreCase("admin")) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	public boolean isUser(MeritBankUser mbUser) {
+		String role = mbUser.getRole();
+		if (role.equalsIgnoreCase("user")) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
 
 }

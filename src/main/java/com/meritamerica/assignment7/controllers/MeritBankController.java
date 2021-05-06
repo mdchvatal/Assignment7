@@ -8,6 +8,7 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -80,33 +81,39 @@ public class MeritBankController {
 	
 	@PostMapping("/authenticate/create-user")
 	@ResponseStatus(HttpStatus.CREATED)
-	public MeritBankUser postNewMeritBankUser(@RequestBody MeritBankUser mbUser) {
-		mbUser.getAuthorities();
+	@Secured("ROLE_ADMIN")
+	public MeritBankUser postNewMeritBankUser(@RequestBody @Valid MeritBankUser mbUser) {
 		meritUserDetailService.addMeritBankUser(mbUser);
 		return mbUser;
 	}
 	
 	@PostMapping("/account-holders")
 	@ResponseStatus(HttpStatus.CREATED)
+	@Secured("ROLE_ADMIN")
 	public AccountHolder postAccountHolder(@RequestBody @Valid AccountHolder accHolder ) {
+		MeritBankUser user = meritUserDetailService.loadUserByUsername(accHolder.getMbUser().getUsername());
+		accHolder.setMbUser(user);
 		meritBankSvc.addAccountHolder(accHolder);
 		return accHolder;
 	}
 	
 	@GetMapping(value = "/account-holders")
 	@ResponseStatus(HttpStatus.OK)
+	@Secured("ROLE_ADMIN")
 	public List<AccountHolder> getAccountHolders() {
 		return meritBankSvc.getAccountHolders();
 	}
 	
 	@GetMapping("/account-holders/{id}")
 	@ResponseStatus(HttpStatus.OK)
+	@Secured("ROLE_ADMIN")
 	public AccountHolder getAccountHolderById(@PathVariable int id) throws NoSuchResourceFoundException{
 		return meritBankSvc.getAccountHolderById(id);
 	}
 	
 	@PostMapping("/account-holders/{id}/checking-accounts")
 	@ResponseStatus(HttpStatus.CREATED)
+	@Secured("ROLE_ADMIN")
 	public CheckingAccount postCheckingAccount(
 			@PathVariable int id, @RequestBody @Valid CheckingAccount checkingAccount) 
 					throws NoSuchResourceFoundException, ExceedsCombinedBalanceLimitException {
@@ -119,6 +126,7 @@ public class MeritBankController {
 
 	@GetMapping("/account-holders/{id}/checking-accounts")
 	@ResponseStatus(HttpStatus.OK)
+	@Secured("ROLE_ADMIN")
 	public List<CheckingAccount> getCheckingAccountsById(
 			@PathVariable int id) throws NoSuchResourceFoundException {
 		return accountHolderSvc.getCheckingAccountsByAccountHolder(
@@ -127,6 +135,7 @@ public class MeritBankController {
 	
 	@PostMapping("/account-holders/{id}/savings-accounts")
 	@ResponseStatus(HttpStatus.CREATED)
+	@Secured("ROLE_ADMIN")
 	public SavingsAccount postSavingsAccount(
 			@PathVariable int id, @RequestBody @Valid SavingsAccount savingsAccount ) 
 					throws NoSuchResourceFoundException, NegativeAmountException, ExceedsCombinedBalanceLimitException {
@@ -138,6 +147,7 @@ public class MeritBankController {
 	
 	@GetMapping("/account-holders/{id}/savings-accounts")
 	@ResponseStatus(HttpStatus.OK)
+	@Secured("ROLE_ADMIN")
 	public List<SavingsAccount> getSavingsAccountsById(
 			@PathVariable int id) throws NoSuchResourceFoundException{
 		return accountHolderSvc.getSavingsAccountsByAccountHolder(
@@ -146,6 +156,7 @@ public class MeritBankController {
 	
 	@PostMapping("/account-holders/{id}/cd-accounts")
 	@ResponseStatus(HttpStatus.CREATED)
+	@Secured("ROLE_ADMIN")
 	public CDAccount postCDAccount(
 			@PathVariable int id, @RequestBody @Valid CDAccountCreator cdAccountCreator)
 					throws NoSuchResourceFoundException, NegativeAmountException, ExceedsCombinedBalanceLimitException {
@@ -157,6 +168,7 @@ public class MeritBankController {
 	
 	@GetMapping("/account-holders/{id}/cd-accounts")
 	@ResponseStatus(HttpStatus.OK)
+	@Secured("ROLE_ADMIN")
 	public List<CDAccount> getCDAccountsById(
 			@PathVariable int id) throws NoSuchResourceFoundException{
 		return accountHolderSvc.getCDAccountsByAccountHolder(

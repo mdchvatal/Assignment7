@@ -3,10 +3,16 @@ package com.meritamerica.assignment7.util;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
+import com.meritamerica.assignment7.models.AccountHolder;
 import com.meritamerica.assignment7.models.MeritBankUser;
 
 import java.util.Date;
@@ -49,5 +55,14 @@ public class JwtUtil {
     public Boolean validateToken(String token, MeritBankUser userDetails) {
         final String username = extractUsername(token);
         return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
+    }
+    public MeritBankUser getCurrentUser() {
+	    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		MeritBankUser user = (MeritBankUser) auth.getPrincipal();
+		return user;
+    }
+    
+    public AccountHolder getAssociatedAccountHolder() {
+    	return getCurrentUser().getAccHolder();
     }
 }

@@ -66,7 +66,7 @@ public class AccountHolder implements Comparable<AccountHolder>{
 	private String ssn;
 	
 	@OneToOne
-	@JoinColumn(name = "id", referencedColumnName = "id")
+	@JoinColumn(name = "user_id", referencedColumnName = "id")
 	private MeritBankUser mbUser;
 	
 	
@@ -122,13 +122,6 @@ public class AccountHolder implements Comparable<AccountHolder>{
 		this.lastName = lastName;
 	}
 	
-	public String getSSN() {
-		return ssn;
-	}
-	
-	public void setSSN(String ssn) {
-		this.ssn = ssn;
-	}
 	
 	public Integer getId() {
 		return id;

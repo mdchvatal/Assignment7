@@ -29,7 +29,6 @@ import com.meritamerica.assignment7.services.MeritUserDetailsService;
 @EnableWebSecurity
 @EnableGlobalMethodSecurity( 
 		  securedEnabled = true)
-@Configuration
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	
 	@Autowired
