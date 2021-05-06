@@ -41,11 +41,11 @@ public class MeritBankUser implements UserDetails{
 	
 	private String role;
 	
-	@NotBlank
-	@NotNull
+	
 	@JsonIgnore
 	@OneToOne(cascade = CascadeType.ALL, mappedBy = "mbUser")
 	private AccountHolder accHolder;
+	
 	
 	public MeritBankUser() {
 	}

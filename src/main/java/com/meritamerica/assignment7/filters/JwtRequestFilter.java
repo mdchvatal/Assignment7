@@ -15,14 +15,16 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import com.meritamerica.assignment7.models.MeritBankUser;
 import com.meritamerica.assignment7.services.MeritBankServiceImpl;
+import com.meritamerica.assignment7.services.MeritUserDetailsService;
 import com.meritamerica.assignment7.util.JwtUtil;
 
 @Component
 public class JwtRequestFilter extends OncePerRequestFilter{
 	
 	@Autowired
-	private MeritBankServiceImpl mbSvcImpl;
+	private MeritUserDetailsService meritUserDetailService;
 	
 	@Autowired
 	private JwtUtil jwtUtil;
@@ -31,17 +33,16 @@ public class JwtRequestFilter extends OncePerRequestFilter{
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
 			throws ServletException, IOException {
 		String authorizationHeader = request.getHeader("Authorization");
-		
 		String username = null;
 		String jwt = null;
 		
 		if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
-			jwt = authorizationHeader.substring(7);
-			username = jwtUtil.extractUsername(jwt);
-		}
+            jwt = authorizationHeader.substring(7);
+            username = jwtUtil.extractUsername(jwt);
+        }
 		
 		if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-			UserDetails userDetails = this.mbSvcImpl.loadUserByUsername(username);
+			MeritBankUser userDetails = meritUserDetailService.loadUserByUsername(username);
 			
 			if (jwtUtil.validateToken(jwt, userDetails)) {
                 UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(

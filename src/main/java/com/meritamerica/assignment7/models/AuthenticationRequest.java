@@ -1,11 +1,12 @@
 package com.meritamerica.assignment7.models;
 
 public class AuthenticationRequest {
+	
 	private String username;
+	
 	private String password;
 	
 	public AuthenticationRequest() {
-		
 	}
 	
 	public AuthenticationRequest(String userName, String password) {
@@ -13,11 +14,11 @@ public class AuthenticationRequest {
 		this.password = password;
 	}
 	
-	public String getUserName() {
+	public String getUsername() {
 		return username;
 	}
 	
-	public void setUserName(String userName) {
+	public void setUsername(String userName) {
 		this.username = userName;
 	}
 	

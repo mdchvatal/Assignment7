@@ -13,6 +13,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.core.GrantedAuthorityDefaults;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -22,6 +23,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 
 import com.meritamerica.assignment7.filters.JwtRequestFilter;
 import com.meritamerica.assignment7.services.MeritBankServiceImpl;
+import com.meritamerica.assignment7.services.MeritUserDetailsService;
 
 
 @EnableWebSecurity
@@ -31,33 +33,35 @@ import com.meritamerica.assignment7.services.MeritBankServiceImpl;
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	
 	@Autowired
-	MeritBankServiceImpl accHolderDetailsService;
+	MeritUserDetailsService meritBankSvc;
 	
 	@Autowired
 	JwtRequestFilter jwtRequestFilter;
 	
+	
 	@Autowired
 	public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-		auth.userDetailsService(accHolderDetailsService);
+		auth.userDetailsService(meritBankSvc);
 	}
 	
 	@Bean
-	public PasswordEncoder getPasswordEncoder() {
-		return NoOpPasswordEncoder.getInstance();
+	public PasswordEncoder encoder() {
+	    return NoOpPasswordEncoder.getInstance();
 	}
 
 	@Override
 	protected void configure(HttpSecurity httpSecurity) throws Exception {
 		httpSecurity.csrf().disable();
-		httpSecurity
-				.authorizeRequests().antMatchers("/authenticate").permitAll()
-				.anyRequest().authenticated().and()
-				.exceptionHandling().and().sessionManagement()
-				.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+		 httpSecurity.authorizeRequests()
+         .antMatchers("/authenticate").permitAll()
+         .antMatchers("/h2-console/**").permitAll()
+         .anyRequest().authenticated().and()
+			.exceptionHandling().and().sessionManagement()
+			.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+		httpSecurity.headers().frameOptions().disable();
 		httpSecurity.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
 	}
 	
-	@Override
 	@Bean
 	public AuthenticationManager authenticationManagerBean() throws Exception {
 		return super.authenticationManagerBean();

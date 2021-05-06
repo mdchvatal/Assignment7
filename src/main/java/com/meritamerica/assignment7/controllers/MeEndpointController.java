@@ -35,10 +35,10 @@ public class MeEndpointController {
 	private AccountHolder accHolder;
 	
 	@GetMapping("/me")
-	public AccountHolder getAccountHolderByUserId() {
+	public MeritBankUser getAccountHolderByUserId() {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		user = (MeritBankUser) auth.getPrincipal();
-		return user.getAccHolder();
+		return user;
 	}
 	
 	@PostMapping("/me/checking-accounts")

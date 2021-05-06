@@ -5,44 +5,24 @@ import java.util.Collections;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import com.meritamerica.assignment7.models.AccountHolder;
 import com.meritamerica.assignment7.models.CDOffering;
-import com.meritamerica.assignment7.models.MeritBankUser;
 import com.meritamerica.assignment7.models.NoSuchResourceFoundException;
 import com.meritamerica.assignment7.repositories.AccountHolderRepository;
 import com.meritamerica.assignment7.repositories.CDOfferingRepository;
-import com.meritamerica.assignment7.repositories.MeritBankUserRepository;
+
 
 
 @Service
-public class MeritBankServiceImpl extends MeritBankService implements UserDetailsService{
+public class MeritBankServiceImpl extends MeritBankService {
 	
 	@Autowired
 	private AccountHolderRepository accHolderRepo;
 	
 	@Autowired
 	private CDOfferingRepository cdOfferingRepo;
-	
-	@Autowired
-	private MeritBankUserRepository mbUserRepository;
-	
-	@Override
-	public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException {
-		if (!mbUserRepository.existsMeritBankUserByUsername(userName)) {
-			throw new UsernameNotFoundException("Username " + userName + " not found.");
-		} else {
-			return mbUserRepository.findByUsername(userName);
-		}
-	}
-	
-	public void addMeritBankUser(MeritBankUser mbUser) {
-		mbUserRepository.save(mbUser);
-	}
 	
 	public AccountHolderRepository getAccHolderRepo() {
 		return accHolderRepo;

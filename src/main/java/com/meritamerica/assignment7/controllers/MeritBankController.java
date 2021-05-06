@@ -35,6 +35,7 @@ import com.meritamerica.assignment7.models.SavingsAccount;
 import com.meritamerica.assignment7.models.MeritBankUser;
 import com.meritamerica.assignment7.services.AccountHolderServiceImpl;
 import com.meritamerica.assignment7.services.MeritBankServiceImpl;
+import com.meritamerica.assignment7.services.MeritUserDetailsService;
 import com.meritamerica.assignment7.util.JwtUtil;
 
 @CrossOrigin
@@ -53,6 +54,9 @@ public class MeritBankController {
 	@Autowired
 	private JwtUtil jwtUtil;
 	
+	@Autowired
+	MeritUserDetailsService meritUserDetailService;
+	
 	@GetMapping("/")
 	@ResponseStatus(HttpStatus.OK)
 	public String welcomeMessage() {
@@ -64,12 +68,12 @@ public class MeritBankController {
 	@PostMapping("/authenticate")
 	public ResponseEntity<?> createAuthenticationToken(@RequestBody AuthenticationRequest authenticationRequest) throws Exception {
 			authManager.authenticate(
-					new UsernamePasswordAuthenticationToken(authenticationRequest.getUserName(), authenticationRequest.getPassword()));
+					new UsernamePasswordAuthenticationToken(authenticationRequest.getUsername(), authenticationRequest.getPassword()));
 
-		MeritBankUser userDetails = (MeritBankUser) meritBankSvc
-				.loadUserByUsername(authenticationRequest.getUserName());
+		final MeritBankUser userDetails = (MeritBankUser) meritUserDetailService
+				.loadUserByUsername(authenticationRequest.getUsername());
 
-		String jwt = jwtUtil.generateToken(userDetails);
+		final String jwt = jwtUtil.generateToken(userDetails);
 		 
 		return ResponseEntity.ok(new AuthenticationResponse(jwt));
 	}
@@ -78,7 +82,7 @@ public class MeritBankController {
 	@ResponseStatus(HttpStatus.CREATED)
 	public MeritBankUser postNewMeritBankUser(@RequestBody MeritBankUser mbUser) {
 		mbUser.getAuthorities();
-		meritBankSvc.addMeritBankUser(mbUser);
+		meritUserDetailService.addMeritBankUser(mbUser);
 		return mbUser;
 	}
 	

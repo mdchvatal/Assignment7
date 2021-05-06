@@ -6,8 +6,8 @@ import com.meritamerica.assignment7.models.MeritBankUser;
 
 public interface MeritBankUserRepository extends JpaRepository<MeritBankUser, Integer>{
 
-	public MeritBankUser findByUsername(String userName);
+	public MeritBankUser findByUsername(String username);
 
-	public boolean existsMeritBankUserByUsername(String userName);
+	public boolean existsMeritBankUserByUsername(String username);
 	
 }
