@@ -25,7 +25,7 @@ public class AccountHolder implements Comparable<AccountHolder>{
 	private static int nextId = 1;
 	
 	@Id
-	@Column(name = "id")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 	
 	public void setId(Integer id) {

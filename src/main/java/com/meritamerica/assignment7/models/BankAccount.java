@@ -26,11 +26,9 @@ import java.text.SimpleDateFormat;
 @MappedSuperclass
 public abstract class BankAccount {
 	
-	
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(name = "id")
-	private int id;
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Integer id;
 	
 	@Positive
 	@NotNull
@@ -71,7 +69,7 @@ public abstract class BankAccount {
 		this.accountOpenedOn = accountOpenedOn;
 	}
 	
-	public int getId() {
+	public Integer getId() {
 		return id;
 	}
 	

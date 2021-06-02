@@ -2,6 +2,7 @@ package com.meritamerica.assignment7;
 
 import javax.servlet.Filter;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -54,6 +55,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		 httpSecurity.authorizeRequests()
          .antMatchers("/authenticate").permitAll()
          .antMatchers("/h2-console/**").permitAll()
+         .antMatchers("/v3/api-docs/**").permitAll()
+		 .antMatchers("/swagger-ui/**").permitAll()
+		 .antMatchers("/swagger-ui.html").permitAll()
          .anyRequest().authenticated().and()
 			.exceptionHandling().and().sessionManagement()
 			.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
@@ -65,5 +69,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	public AuthenticationManager authenticationManagerBean() throws Exception {
 		return super.authenticationManagerBean();
 	}
+	
 	
 }
