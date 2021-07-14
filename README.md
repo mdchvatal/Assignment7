@@ -4,3 +4,4 @@ This repository holds the server side application for a full stack banking appli
 checking with sessions controlled by JWTs.
 
 It is set up with REST controllers, a service layer, and a database layer which (in this instance) will build and maintain a MySQL database.
+ 
